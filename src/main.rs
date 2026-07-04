@@ -175,33 +175,6 @@ impl GapBuffer {
 
         self.move_gap_to(next_line_start + col.min(next_line_len));
     }
-
-    fn debug_dump(&self) {
-        eprint!("\r["); // eprint so it doesn't interleave with your normal stdout text
-        for i in 0..self.buffer.len() {
-            if i == self.gap_start {
-                eprint!("|"); // mark where the gap starts
-            }
-            let b = self.buffer[i];
-            if i >= self.gap_start && i < self.gap_end {
-                eprint!("_"); // inside the gap — show as underscore regardless of actual byte
-            } else if b.is_ascii_graphic() || b == b' ' {
-                eprint!("{}", b as char); // printable ASCII, show as-is
-            } else {
-                eprint!("."); // non-printable or multi-byte continuation byte
-            }
-        }
-        if self.gap_end == self.buffer.len() {
-            eprint!("|"); // handle gap touching the very end
-        }
-        eprintln!(
-            "]  gap_start={} gap_end={} len={} visible_len={}",
-            self.gap_start,
-            self.gap_end,
-            self.buffer.len(),
-            self.visible_len()
-        );
-    }
 }
 
 fn render(gb: &GapBuffer) -> io::Result<()> {
